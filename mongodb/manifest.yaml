@@ -5,29 +5,24 @@ metadata:
   # these are replicaset labels.
   labels:
     project: roboshop
-    purpose: rs-demo 
-    tier: frontend
-    component: frontend
-  annotations:
-    kubernetes.io/change-cause: "moving to 1.29.7"
+    tier: db
+    component: mongodb
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     # Using these labels replicaset selects the pod.
     matchLabels:
       project: roboshop
-      purpose: rs-demo
-      tier: frontend
-      component: frontend
+      tier: db
+      component: mongodb
   # This is pod definition,  pod is subset of replicaset
   template:
   metadata: 
     labels:
       project: roboshop
-      purpose: rs-demo
-      tier: frontend
-      component: frontend
+      tier: db
+      component: mongodb
     spec:
       containers:
-      - name: nginx
-        image: nginx:1.29.7
+      - name: mongodb
+        image: lokeshlh/mongodb:1.0.0
