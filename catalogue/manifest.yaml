@@ -1,49 +1,66 @@
 apiVersion: v1 
+kind: ConfigMap
+metadata:
+  name: catalogue
+  namespace: roboshop
+  labels:
+    project: roboshop
+    tier: backend
+    component: catalogue
+data: 
+  MONGO: "true"
+  MONGO_URL: "mongodb://mongodb:27017/catalogue"
+  trainer: "someone" 
+---
+apiVersion: v1 
 kind: Deployment
 metadata:
-  name: mongodb
+  name: catalogue
   namespace: roboshop
   # these are replicaset labels.
   labels:
     project: roboshop
-    tier: db
-    component: mongodb
+    tier: backend
+    component: catalogue
 spec:
   replicas: 1
   selector:
     # Using these labels replicaset selects the pod.
     matchLabels:
       project: roboshop
-      tier: db
+      tier: backend
       component: mongodb
   # This is pod definition,  pod is subset of replicaset
   template:
   metadata: 
     labels:
       project: roboshop
-      tier: db
-      component: mongodb
+      tier: backend
+      component: catalogue
     spec:
       containers:
-      - name: mongodb
-        image: lokeshlh/mongodb:1.0.0
+      - name: catalogue
+        image: lokeshlh/catalogue:1.0.0
+        envFrom:
+        - configMapRef:
+            name: catalogue
 ---
 apiVersion: v1        # its cluster service.
 kind: Service
 metadata:
-  name: mongodb
+  name: catalogue
   namespace: roboshop
   labels:
     project: roboshop
-    tier: db
-    component: mongodb
+    tier: backend
+    component: catalogue
 spec:
   selector:
     # Labels (resource) is used to select pods to provide network ☝️.
     project: roboshop
-    component: frontend
-    environment: dev
+    tier: backend
+    component: catalogue
   ports:
   - protocol: TCP
-    port: 27017 # service port
-    targetPort: 27017 # container port
+    port: 8080 # service port
+    targetPort: 8080 # container port
