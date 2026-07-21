@@ -41,6 +41,26 @@ spec:
       containers:
       - name: catalogue
         image: lokeshlh/catalogue:1.0.0
+        resources:
+          cpu: "100m"
+          memory: "128Mi"
+        limits:
+          cpu: "100m"
+          memory: "128Mi"
+        readinessProbe: 
+          # httpGet: 
+          #   path: /health
+          #   port: 8080
+          tcpSocket:
+            port: 8080
+          failureThreshold: 2
+          periodSeconds: 10
+          initialDelaySeconds: 5
+        livenessProbe:
+          httpsGet: 
+            path: /health
+            port: 8080
+
         envFrom:
         - configMapRef:
             name: catalogue
