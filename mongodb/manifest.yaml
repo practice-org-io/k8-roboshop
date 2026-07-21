@@ -1,4 +1,4 @@
-apiVersion: apps/v1 
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: mongodb
@@ -18,11 +18,11 @@ spec:
       component: mongodb
   # This is pod definition,  pod is subset of replicaset
   template:
-  metadata: 
-    labels:
-      project: roboshop
-      tier: db
-      component: mongodb
+    metadata:
+      labels:
+        project: roboshop
+        tier: db
+        component: mongodb
     spec:
       containers:
       - name: mongodb

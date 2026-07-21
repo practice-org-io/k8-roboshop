@@ -10,9 +10,8 @@ metadata:
 data: 
   MONGO: "true"
   MONGO_URL: "mongodb://mongodb:27017/catalogue"
-  trainer: "someone" 
 ---
-apiVersion: v1 
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: catalogue
@@ -29,35 +28,36 @@ spec:
     matchLabels:
       project: roboshop
       tier: backend
-      component: mongodb
+      component: catalogue
   # This is pod definition,  pod is subset of replicaset
   template:
-  metadata: 
-    labels:
-      project: roboshop
-      tier: backend
-      component: catalogue
+    metadata: 
+      labels:
+        project: roboshop
+        tier: backend
+        component: catalogue
     spec:
       containers:
       - name: catalogue
-        image: lokeshlh/catalogue:1.0.0
+        image: lokeshlh/catalogue:1.4.0
         resources:
-          cpu: "100m"
-          memory: "128Mi"
-        limits:
-          cpu: "100m"
-          memory: "128Mi"
-        readinessProbe: 
-          # httpGet: 
+          requests:
+            cpu: "100m"
+            memory: "128Mi"
+          limits:
+            cpu: "100m"
+            memory: "128Mi"
+        readinessProbe:
+          # httpGet:
           #   path: /health
           #   port: 8080
           tcpSocket:
             port: 8080
           failureThreshold: 2
           periodSeconds: 10
-          initialDelaySeconds: 5
+          initialDelaySeconds: 15
         livenessProbe:
-          httpsGet: 
+          httpGet:
             path: /health
             port: 8080
 
